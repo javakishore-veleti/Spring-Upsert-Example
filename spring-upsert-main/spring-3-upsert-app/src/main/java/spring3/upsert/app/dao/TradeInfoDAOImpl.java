@@ -2,6 +2,7 @@ package spring3.upsert.app.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +42,19 @@ public class TradeInfoDAOImpl implements TradeInfoDAO {
 						ps.setBigDecimal(6, tradeInfo.getTotalDiscount());
 					}
 				});
+
+		System.out.println(updateCounts);
 		return updateCounts;
 	}
 
 	@Override
 	public TradeInfo saveTradeInfo(TradeInfo tradeInfo) throws Exception {
 
-		return null;
+		List<TradeInfo> tradeInfos = new ArrayList<>();
+
+		batchUpdateTradeInfos(tradeInfos);
+
+		return tradeInfo;
 	}
 
 	@Override

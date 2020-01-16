@@ -14,7 +14,7 @@ http://www.springframework.org/schema/util  http://www.springframework.org/schem
 		<property name="driverClassName"
 			value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url"
-			value="jdbc:oracle:thin:@localhost:1521:xe" />
+			value="jdbc:oracle:thin:@localhost:49161:xe" />
 		<property name="username" value="system" />
 		<property name="password" value="oracle" />
 	</bean>

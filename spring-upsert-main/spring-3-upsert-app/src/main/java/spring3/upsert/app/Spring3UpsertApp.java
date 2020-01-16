@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import spring.upsert.common.domain.TradeInfo;
 import spring3.upsert.app.dao.TradeInfoDAO;
@@ -12,6 +13,7 @@ import spring3.upsert.app.dao.TradeInfoDAOImpl;
 
 // https://mkyong.com/spring/spring-jdbctemplate-querying-examples/
 // https://mkyong.com/spring/spring-jdbctemplate-batchupdate-example/
+// https://hub.docker.com/r/wnameless/oracle-xe-11g-r2
 
 public class Spring3UpsertApp {
 
@@ -22,6 +24,8 @@ public class Spring3UpsertApp {
 		// open/read the application context file
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("application-context-all.xml");
 
+		// initializeDB(ctx);
+
 		TradeInfoDAOImpl tradeInfoDAO = ctx.getBean(TradeInfoDAOImpl.class);
 
 		// Step 1 - Insert into DB new TradeInfo objects every execution of this class
@@ -30,8 +34,24 @@ public class Spring3UpsertApp {
 		// Step 2 - Fetch from database current TradeInfo records
 		List<TradeInfo> tradeInfos = fetchAllTradeInfos(tradeInfoDAO);
 
+		System.out.println(tradeInfos);
+
 		// Step 3 - Batch UPSERT
 		batchUpsertForNewAndFetchedTrades(tradeInfos, tradeInfoDAO);
+	}
+
+	private static void initializeDB(ClassPathXmlApplicationContext ctx) {
+
+		JdbcTemplate jdbcTemplate = ctx.getBean(JdbcTemplate.class);
+
+		// jdbcTemplate.execute(" DROP TABLE trade_info ");
+
+		String sql = "CREATE TABLE trade_info "
+				+ "(id INTEGER not NULL, status VARCHAR(25), from_currency VARCHAR(255), "
+				+ " to_currency VARCHAR(255), "
+				+ " no_of_trades INTEGER,  unit_price decimal(6,2), total_price decimal(6,2), total_discount decimal(6,2) , PRIMARY KEY ( id ))";
+
+		jdbcTemplate.execute(sql);
 	}
 
 	private static void initializeByCreatingDummyTrades(TradeInfoDAO tradeInfoDAO) throws Exception {
