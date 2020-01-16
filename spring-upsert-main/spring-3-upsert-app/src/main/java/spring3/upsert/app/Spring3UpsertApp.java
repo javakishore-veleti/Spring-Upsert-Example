@@ -98,7 +98,7 @@ public class Spring3UpsertApp {
 	private static List<TradeInfo> fetchAllTradeInfos(TradeInfoDAO tradeInfoDAO) throws Exception {
 		List<TradeInfo> tradeInfos = tradeInfoDAO.findAllTradeInfos();
 
-		System.out.println("No of Trades in the DB in the beginning " + tradeInfos.size());
+		System.out.println("No of Trades in the DB " + tradeInfos.size());
 
 		return tradeInfos;
 	}
