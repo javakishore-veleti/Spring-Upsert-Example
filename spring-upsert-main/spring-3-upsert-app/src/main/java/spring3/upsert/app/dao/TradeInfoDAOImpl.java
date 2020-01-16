@@ -16,23 +16,10 @@ import spring.upsert.common.domain.TradeInfo;
 @Repository
 public class TradeInfoDAOImpl implements TradeInfoDAO {
 
-//	private static final String TRADE_INFO_INSERT_STR = " INSERT INTO trade_info (id, from_currency, to_currency, no_of_trades, unit_price, "
-//			+ "total_price, total_discount) VALUES ( trade_info_seq.NEXTVAL, ?, ?, ?, ?, ?, ?) ";
-
-//	private static final String TRADE_INFO_INSERT_STR = " MERGE INTO trade_info TRADEINFO_TBL USING "
-//			+ "  	(SELECT id  FROM trade_info  WHERE id = ?) E  ON (TRADEINFO_TBL.id = E.id)  " 
-//			+ " 	WHEN MATCHED THEN  "
-//			+ " 		UPDATE SET "
-//			+ "				TRADEINFO_TBL.from_currency = ? , "
-//			+ "				TRADEINFO_TBL.to_currency = ?, "
-//			+ "				TRADEINFO_TBL.no_of_trades = ?  "
-//			+ " 	WHEN NOT MATCHED THEN  "
-//			+ " 		INSERT  (TRADEINFO_TBL.id, TRADEINFO_TBL.from_currency, TRADEINFO_TBL.to_currency, TRADEINFO_TBL.no_of_trades, TRADEINFO_TBL.unit_price, "
-//			+ "				TRADEINFO_TBL.total_price, TRADEINFO_TBL.total_discount ) "
-//			+ " 		VALUES (trade_info_seq.NEXTVAL, ?, ?, ?, ?, ?, ?) ";
-
 	// https://stackoverflow.com/questions/17097818/basic-merge-into-same-table
-	
+	/*
+	 * "This is a good simple example because, if you're only using one table, you have to use the select 1 from dual and in the ON, ".....
+	 */
 	private static final String TRADE_INFO_INSERT_STR = " MERGE INTO trade_info TRADEINFO_TBL USING "
 			+ "  	(SELECT 1 FROM DUAL) E  ON (TRADEINFO_TBL.id = ? )  " + " 	WHEN MATCHED THEN  "
 			+ " 		UPDATE SET " + "				TRADEINFO_TBL.from_currency = ? , "
