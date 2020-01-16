@@ -15,10 +15,8 @@ public class TradeInfoRowMapper implements RowMapper<TradeInfo> {
 		TradeInfo tradeInfo = new TradeInfo();
 
 		tradeInfo.setId(rs.getLong("id"));
-		tradeInfo.setCustomerId(rs.getLong("customer_id"));
 		tradeInfo.setFromCurrency(rs.getString("from_currency"));
 		tradeInfo.setToCurrency(rs.getString("to_currency"));
-		tradeInfo.setStatus(rs.getString("status"));
 
 		return tradeInfo;
 	}

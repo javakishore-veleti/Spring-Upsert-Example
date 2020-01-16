@@ -12,7 +12,7 @@
 	</appender>
 
 	<category name="org.springframework.jdbc.core.JdbcTemplate">
-		<priority value="INFO" />
+		<priority value="debug" />
 	</category>
 
 	<root>

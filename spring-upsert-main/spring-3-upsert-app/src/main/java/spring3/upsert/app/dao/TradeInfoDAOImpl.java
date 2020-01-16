@@ -2,6 +2,7 @@ package spring3.upsert.app.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,35 @@ import spring.upsert.common.domain.TradeInfo;
 @Repository
 public class TradeInfoDAOImpl implements TradeInfoDAO {
 
-	private static final String TRADE_INFO_INSERT_STR = " INSERT INTO trade_info (from_currency, to_currency, no_of_trades, unit_price, "
-			+ "total_price, total_discount) VALUES ( ?, ?, ?, ?, ?, ?) ";
+//	private static final String TRADE_INFO_INSERT_STR = " INSERT INTO trade_info (id, from_currency, to_currency, no_of_trades, unit_price, "
+//			+ "total_price, total_discount) VALUES ( trade_info_seq.NEXTVAL, ?, ?, ?, ?, ?, ?) ";
+
+//	private static final String TRADE_INFO_INSERT_STR = " MERGE INTO trade_info TRADEINFO_TBL USING "
+//			+ "  	(SELECT id  FROM trade_info  WHERE id = ?) E  ON (TRADEINFO_TBL.id = E.id)  " 
+//			+ " 	WHEN MATCHED THEN  "
+//			+ " 		UPDATE SET "
+//			+ "				TRADEINFO_TBL.from_currency = ? , "
+//			+ "				TRADEINFO_TBL.to_currency = ?, "
+//			+ "				TRADEINFO_TBL.no_of_trades = ?  "
+//			+ " 	WHEN NOT MATCHED THEN  "
+//			+ " 		INSERT  (TRADEINFO_TBL.id, TRADEINFO_TBL.from_currency, TRADEINFO_TBL.to_currency, TRADEINFO_TBL.no_of_trades, TRADEINFO_TBL.unit_price, "
+//			+ "				TRADEINFO_TBL.total_price, TRADEINFO_TBL.total_discount ) "
+//			+ " 		VALUES (trade_info_seq.NEXTVAL, ?, ?, ?, ?, ?, ?) ";
+
+	// https://stackoverflow.com/questions/17097818/basic-merge-into-same-table
+	
+	private static final String TRADE_INFO_INSERT_STR = " MERGE INTO trade_info TRADEINFO_TBL USING "
+			+ "  	(SELECT 1 FROM DUAL) E  ON (TRADEINFO_TBL.id = ? )  " + " 	WHEN MATCHED THEN  "
+			+ " 		UPDATE SET " + "				TRADEINFO_TBL.from_currency = ? , "
+			+ "				TRADEINFO_TBL.to_currency = ?, " + "				TRADEINFO_TBL.no_of_trades = ?  "
+			+ " 	WHEN NOT MATCHED THEN  "
+			+ " 		INSERT  (TRADEINFO_TBL.id, TRADEINFO_TBL.from_currency, TRADEINFO_TBL.to_currency, TRADEINFO_TBL.no_of_trades, TRADEINFO_TBL.unit_price, "
+			+ "				TRADEINFO_TBL.total_price, TRADEINFO_TBL.total_discount ) "
+			+ " 		VALUES (trade_info_seq.NEXTVAL, ?, ?, ?, ?, ?, ?) ";
 
 	private static final String TRADE_INFO_DELETE_ALL_SQL_STR = "DELETE FROM trade_info ";
 
-	private static final String TRADE_INFO_FETCH_ALL_SQL_STR = "SELECT id, status, from_currency, to_currency, no_of_trades, unit_price, "
+	private static final String TRADE_INFO_FETCH_ALL_SQL_STR = "SELECT id,  from_currency, to_currency, no_of_trades, unit_price, "
 			+ " total_price, total_discount FROM trade_info ";
 
 	@Autowired
@@ -34,16 +58,30 @@ public class TradeInfoDAOImpl implements TradeInfoDAO {
 				new ParameterizedPreparedStatementSetter<TradeInfo>() {
 
 					public void setValues(PreparedStatement ps, TradeInfo tradeInfo) throws SQLException {
-						ps.setString(1, tradeInfo.getFromCurrency());
-						ps.setString(2, tradeInfo.getToCurrency());
-						ps.setInt(3, tradeInfo.getNoOfTradeUnits());
-						ps.setBigDecimal(4, tradeInfo.getUnitPrice());
-						ps.setBigDecimal(5, tradeInfo.getTotalPrice());
-						ps.setBigDecimal(6, tradeInfo.getTotalDiscount());
+
+						if (tradeInfo.getId() == null || tradeInfo.getId() < 1) {
+
+							// ps.setNull(1, Types.BIGINT);
+							ps.setLong(1, -100L);
+
+						} else {
+
+							ps.setLong(1, tradeInfo.getId());
+						}
+
+						ps.setString(2, tradeInfo.getFromCurrency());
+						ps.setString(3, tradeInfo.getToCurrency());
+						ps.setInt(4, tradeInfo.getNoOfTradeUnits());
+
+						ps.setString(5, tradeInfo.getFromCurrency());
+						ps.setString(6, tradeInfo.getToCurrency());
+						ps.setInt(7, tradeInfo.getNoOfTradeUnits());
+						ps.setBigDecimal(8, tradeInfo.getUnitPrice());
+						ps.setBigDecimal(9, tradeInfo.getTotalPrice());
+						ps.setBigDecimal(10, tradeInfo.getTotalDiscount());
 					}
 				});
 
-		System.out.println(updateCounts);
 		return updateCounts;
 	}
 
@@ -51,6 +89,7 @@ public class TradeInfoDAOImpl implements TradeInfoDAO {
 	public TradeInfo saveTradeInfo(TradeInfo tradeInfo) throws Exception {
 
 		List<TradeInfo> tradeInfos = new ArrayList<>();
+		tradeInfos.add(tradeInfo);
 
 		batchUpdateTradeInfos(tradeInfos);
 

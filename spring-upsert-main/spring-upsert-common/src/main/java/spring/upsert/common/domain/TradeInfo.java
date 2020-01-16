@@ -6,8 +6,6 @@ public class TradeInfo extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long customerId;
-
 	private String fromCurrency;
 	private String toCurrency;
 
@@ -22,10 +20,9 @@ public class TradeInfo extends BaseDomain {
 		super();
 	}
 
-	public TradeInfo(Long customerId, String fromCurrency, String toCurrency, Integer noOfTradeUnits,
-			BigDecimal unitPrice, BigDecimal tradeAmount, BigDecimal totalPrice, BigDecimal totalDiscount) {
+	public TradeInfo(String fromCurrency, String toCurrency, Integer noOfTradeUnits, BigDecimal unitPrice,
+			BigDecimal tradeAmount, BigDecimal totalPrice, BigDecimal totalDiscount) {
 		super();
-		this.customerId = customerId;
 		this.fromCurrency = fromCurrency;
 		this.toCurrency = toCurrency;
 		this.noOfTradeUnits = noOfTradeUnits;
@@ -33,14 +30,6 @@ public class TradeInfo extends BaseDomain {
 		this.tradeAmount = tradeAmount;
 		this.totalPrice = totalPrice;
 		this.totalDiscount = totalDiscount;
-	}
-
-	public Long getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
 	}
 
 	public String getFromCurrency() {
@@ -101,10 +90,9 @@ public class TradeInfo extends BaseDomain {
 
 	@Override
 	public String toString() {
-		return "TradeInfo [customerId=" + customerId + ", fromCurrency=" + fromCurrency + ", toCurrency=" + toCurrency
-				+ ", noOfTradeUnits=" + noOfTradeUnits + ", unitPrice=" + unitPrice + ", tradeAmount=" + tradeAmount
-				+ ", totalPrice=" + totalPrice + ", totalDiscount=" + totalDiscount + ", toString()=" + super.toString()
-				+ "]";
+		return "TradeInfo [fromCurrency=" + fromCurrency + ", toCurrency=" + toCurrency + ", noOfTradeUnits="
+				+ noOfTradeUnits + ", unitPrice=" + unitPrice + ", tradeAmount=" + tradeAmount + ", totalPrice="
+				+ totalPrice + ", totalDiscount=" + totalDiscount + ", toString()=" + super.toString() + "]";
 	}
 
 }
